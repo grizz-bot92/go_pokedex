@@ -7,7 +7,7 @@ import (
 	"os"
 )
 
-func startRepl() {
+func startRepl(cfg *config) {
 	scanner := bufio.NewScanner(os.Stdin)
 
 	for {
@@ -18,19 +18,17 @@ func startRepl() {
 		fmt.Print("Pokedex > ")
 		scanner.Scan()
 
-		inputText := scanner.Text()
-		cleanInput(inputText)
+		inputText := cleanInput(scanner.Text())
+		commandName := inputText[0]
 
-		value, ok := commands[inputText]
-		if ok {
-			switch value.name {
-			case "help":
-				commandHelp()
-			case "exit":
-				commandExit()
-			default:
-				fmt.Println("Unknown command")
-			}
+		value, ok := cfg.commands[commandName]
+		if ok{
+			err := value.callback(cfg)
+			if err != nil{
+				fmt.Println(err)
+			}	
+		}else{
+			fmt.Println("Unknown command")
 		}
 
 	}

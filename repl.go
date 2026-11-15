@@ -1,8 +1,9 @@
 package main
 
-import(
+import (
 	"strings"
 )
+
 
 func cleanInput(text string)[]string{
 	cleanedString := []string{}
@@ -14,16 +15,18 @@ func cleanInput(text string)[]string{
 	return cleanedString
 }
 
+type config struct{
+	commands map[string]cliCommand
+}
+
 type cliCommand struct {
 	name        string
 	description string
-	callback    func() error
+	callback    func(c *config)error
 }
 
-var commands = map[string]cliCommand{}
-
-func init() {
-	commands = map[string]cliCommand{
+func getCommands()map[string]cliCommand{
+	return map[string]cliCommand{
 		"exit": {
 			name:        "exit",
 			description: "Exit the Pokedex",
@@ -36,3 +39,4 @@ func init() {
 		},
 	}
 }
+
